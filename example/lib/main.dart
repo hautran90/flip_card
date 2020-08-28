@@ -42,36 +42,24 @@ class HomePage extends StatelessWidget {
       child: FlipCard(
         direction: FlipDirection.HORIZONTAL,
         speed: 1000,
-        onFlipDone: (status) {
-          print(status);
+        onFlip: (){
         },
-        front: Container(
-          decoration: BoxDecoration(
-            color: Color(0xFF006666),
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Front', style: Theme.of(context).textTheme.headline),
-              Text('Click here to flip back',
-                  style: Theme.of(context).textTheme.body1),
-            ],
-          ),
+        onFlipDone: (status) {
+        },
+        colorHeaderTitle: Colors.deepPurple,
+        titleWidgetFront: Text('check title front'),
+        titleWidgetBack: Text('check title back'),
+        widgetIconBack: Icon(Icons.chevron_left),
+        widgetIconFront: Icon(Icons.chevron_right),
+        front: Center(
+          child: Text(
+            'Front'
+          )
         ),
-        back: Container(
-          decoration: BoxDecoration(
-            color: Color(0xFF006666),
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Back', style: Theme.of(context).textTheme.headline),
-              Text('Click here to flip front',
-                  style: Theme.of(context).textTheme.body1),
-            ],
-          ),
+        back: Center(
+            child: Text(
+                'Back'
+            )
         ),
       ),
     );

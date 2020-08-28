@@ -43,6 +43,13 @@ typedef void BoolCallback(bool isFront);
 class FlipCard extends StatefulWidget {
   final Widget front;
   final Widget back;
+  final Color colorBackgroundFront;
+  final Widget widgetIconFront;
+  final Widget widgetIconBack;
+  final Widget titleWidgetFront;
+  final Color colorHeaderTitle;
+  final Widget titleWidgetBack;
+  final Color colorBackgroundBack;
 
   /// The amount of milliseconds a turn animation will take.
   final int speed;
@@ -79,6 +86,13 @@ class FlipCard extends StatefulWidget {
       {Key key,
       @required this.front,
       @required this.back,
+      this.colorBackgroundFront,
+      this.colorBackgroundBack,
+      this.titleWidgetFront,
+      this.widgetIconBack,
+      this.widgetIconFront,
+      this.colorHeaderTitle,
+      this.titleWidgetBack,
       this.speed = 500,
       this.onFlip,
       this.onFlipDone,
@@ -164,18 +178,19 @@ class FlipCardState extends State<FlipCard>
       ],
     );
 
+//    if (widget.flipOnTouch) {
+//      return GestureDetector(
+//        behavior: HitTestBehavior.translucent,
+//        onTap: toggleCard,
+//        child: child,
+//      );
+//    }
+
     // if we need to flip the card on taps, wrap the content
-    if (widget.flipOnTouch) {
-      return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: toggleCard,
-        child: child,
-      );
-    }
     return child;
   }
 
-  Widget _buildContent({@required bool front}) {
+  Widget _buildContent({@required bool front, Function onTap}) {
     // pointer events that would reach the backside of the card should be
     // ignored
     return IgnorePointer(
@@ -184,7 +199,79 @@ class FlipCardState extends State<FlipCard>
       ignoring: front ? !isFront : isFront,
       child: AnimationCard(
         animation: front ? _frontRotation : _backRotation,
-        child: front ? widget.front : widget.back,
+        child: front
+            ? Container(
+                decoration: BoxDecoration(
+                  color: widget.colorBackgroundFront == null
+                      ? Color(0xFF006666)
+                      : widget.colorBackgroundFront,
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      color: widget.colorHeaderTitle,
+                      child: Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            widget.titleWidgetFront,
+                            GestureDetector(
+                              onTap: () {
+                                if (widget.flipOnTouch) {
+                                  toggleCard();
+                                }
+                              },
+                              child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: widget.widgetIconFront),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    widget.front
+                  ],
+                ),
+              )
+            : Container(
+                decoration: BoxDecoration(
+                  color: widget.colorBackgroundBack == null
+                      ? Color(0xFF006666)
+                      : widget.colorBackgroundBack,
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      color: widget.colorHeaderTitle,
+                      child: Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            widget.titleWidgetBack,
+                            GestureDetector(
+                              onTap: () {
+                                if (widget.flipOnTouch) {
+                                  toggleCard();
+                                }
+                              },
+                              child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: widget.widgetIconBack),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    widget.back
+                  ],
+                ),
+              ),
         direction: widget.direction,
       ),
     );
